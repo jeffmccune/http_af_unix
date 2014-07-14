@@ -1,29 +1,34 @@
-# HttpAfUnix
+# HTTPAFUnix
 
-TODO: Write a gem description
+`HTTPAFUnix::WebApp` is a simple sinatra application intended to run inside of
+a web server listening on a unix domain socket rather than a TCP socket.  The
+purpose is to provide something simple and light to develop HTTP client
+libraries with.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'http_af_unix'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install http_af_unix
+```bash
+bundle install --path .bundle/gems/
+bundle exec unicorn -c config/unicorn.rb
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```bash
+echo -e "GET http://127.0.0.1/ HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n\r\n" \
+  | socat - UNIX-CONNECT:$(pwd)/tmp/sockets/unicorn.sock
+```
 
-## Contributing
+This should result in something like the following response:
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+    HTTP/1.1 200 OK
+    Date: Mon, 14 Jul 2014 17:55:29 GMT
+    Status: 200 OK
+    Connection: close
+    Content-Type: text/html;charset=utf-8
+    Content-Length: 26
+    X-XSS-Protection: 1; mode=block
+    X-Content-Type-Options: nosniff
+    X-Frame-Options: SAMEORIGIN
+
+    Hello, nginx and unicorn!
