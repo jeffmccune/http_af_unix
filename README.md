@@ -9,14 +9,27 @@ libraries with.
 
 ```bash
 bundle install --path .bundle/gems/
-bundle exec unicorn -c config/unicorn.rb
 ```
 
 ## Usage
 
+Start the server:
+
+```bash
+bundle exec unicorn -c config/unicorn.rb
+```
+
+Issue a request to the server using `socat`
+
 ```bash
 echo -e "GET http://127.0.0.1/ HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n\r\n" \
   | socat - UNIX-CONNECT:$(pwd)/tmp/sockets/unicorn.sock
+```
+
+The socket can be changed using an environment variable
+
+```bash
+UNICORN_SOCKET=/tmp/unicorn.sock bundle exec unicorn -c config/unicorn.rb
 ```
 
 This should result in something like the following response:
